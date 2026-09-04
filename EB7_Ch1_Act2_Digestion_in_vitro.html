@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EB7 · Chapitre 1 - Activité 2 : Digestion in vitro de la viande</title>
+<style>
+  :root{
+    --bleu:#AEE1E7; --bleu-fonce:#6FB8C4; --vert:#C6E9C8; --vert-fonce:#7FBF86;
+    --rose:#FFD6E0; --rose-fonce:#F49CB0; --jaune:#FFF3B0; --jaune-fonce:#F2D24B;
+    --mauve:#DCC6F0; --mauve-fonce:#B79CE0; --creme:#FFFDF7; --encre:#3E3A39; --gris:#8A8580;
+    --radius:18px; --ombre:0 6px 18px rgba(62,58,57,0.10);
+    font-family:'Segoe UI','Trebuchet MS',Verdana,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:linear-gradient(180deg,#FBF9F4,#F3F7F5 40%,#FBF9F4);color:var(--encre);line-height:1.5;}
+  header{background:linear-gradient(120deg,var(--jaune),var(--rose));padding:22px 20px 60px;text-align:center;}
+  header h1{margin:0 0 6px;font-size:clamp(1.3rem,3vw,2rem);}
+  header p.sub{margin:0;opacity:.85;font-size:.95rem;}
+  .badge-strip{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;}
+  .badge{background:rgba(255,255,255,.75);border-radius:999px;padding:5px 14px;font-size:.78rem;font-weight:600;box-shadow:var(--ombre);}
+  nav.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:960px;margin:-38px auto 0;padding:0 14px;position:relative;z-index:5;}
+  nav.tabs button{border:none;cursor:pointer;padding:14px 18px;border-radius:var(--radius);font-size:.92rem;font-weight:700;color:var(--encre);box-shadow:var(--ombre);transition:transform .15s;flex:1 1 200px;min-width:170px;}
+  nav.tabs button:hover{transform:translateY(-3px);}
+  nav.tabs button.active{outline:3px solid var(--encre);outline-offset:2px;}
+  nav.tabs button:nth-child(1){background:var(--bleu);}
+  nav.tabs button:nth-child(2){background:var(--jaune);}
+  nav.tabs button:nth-child(3){background:var(--vert);}
+  nav.tabs button:nth-child(4){background:var(--rose);}
+  main{max-width:960px;margin:34px auto;padding:0 16px 60px;}
+  section.panel{display:none;animation:fade .35s ease;}
+  section.panel.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .card{background:var(--creme);border-radius:var(--radius);box-shadow:var(--ombre);padding:22px 24px;margin-bottom:20px;}
+  .card h2{margin-top:0;font-size:1.25rem;}
+  .strategie{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:4px 10px;border-radius:999px;margin-bottom:10px;background:var(--mauve);color:#4A3A6B;}
+  .definition{background:var(--jaune);border-radius:var(--radius);padding:18px 20px;margin-bottom:18px;font-size:1.02rem;}
+  .btn{border:none;cursor:pointer;padding:11px 22px;border-radius:999px;font-weight:700;background:var(--bleu-fonce);color:#fff;font-size:.9rem;transition:transform .15s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.secondary{background:var(--mauve-fonce);}
+  .btn-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+  .quiz-progress{height:10px;background:#EDE9E0;border-radius:999px;overflow:hidden;margin-bottom:18px;}
+  .quiz-progress-bar{height:100%;background:var(--jaune-fonce);width:0%;transition:width .3s;}
+  .quiz-question{font-weight:700;margin-bottom:12px;font-size:1.05rem;}
+  .quiz-options{display:grid;gap:10px;}
+  .quiz-option{text-align:left;padding:12px 16px;border-radius:14px;border:2px solid #E7E1D8;background:#fff;cursor:pointer;font-size:.95rem;}
+  .quiz-option:hover{background:var(--jaune);}
+  .quiz-option.correct{background:var(--vert);border-color:var(--vert-fonce);}
+  .quiz-option.wrong{background:var(--rose);border-color:var(--rose-fonce);}
+  .quiz-feedback{margin-top:12px;font-size:.92rem;font-style:italic;min-height:1.4em;}
+  .quiz-score{text-align:center;}
+  .quiz-score .score-num{font-size:2.6rem;font-weight:800;color:var(--bleu-fonce);}
+  .scramble-word{margin-bottom:20px;}
+  .scramble-clue{font-weight:600;margin-bottom:8px;}
+  .scramble-letters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+  .scramble-letters button{width:40px;height:40px;border-radius:10px;border:2px solid var(--bleu-fonce);background:#fff;font-weight:800;font-size:1.05rem;cursor:pointer;}
+  .scramble-letters button.used{opacity:.25;pointer-events:none;}
+  .scramble-answer{display:flex;gap:6px;min-height:44px;padding:4px;border-bottom:3px dashed var(--gris);margin-bottom:6px;}
+  .scramble-answer span{width:40px;height:40px;border-radius:10px;background:var(--vert);display:flex;align-items:center;justify-content:center;font-weight:800;}
+  .scramble-status{font-size:.85rem;font-weight:700;}
+  .match-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .match-col h3{font-size:.9rem;margin:0 0 8px;color:var(--gris);}
+  .match-item{background:#fff;border:2px solid #E7E1D8;border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;font-size:.88rem;transition:background .15s;}
+  .match-item.selected{border-color:var(--bleu-fonce);background:var(--bleu);}
+  .match-item.matched{background:var(--vert);border-color:var(--vert-fonce);pointer-events:none;opacity:.85;}
+  .match-item.wrong{background:var(--rose);border-color:var(--rose-fonce);}
+  .match-status{margin-top:10px;font-weight:700;text-align:center;}
+  .memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px;}
+  .memory-card{aspect-ratio:1/1;border-radius:14px;background:var(--mauve);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;text-align:center;padding:6px;cursor:pointer;box-shadow:var(--ombre);user-select:none;}
+  .memory-card.flipped{background:#fff;border:2px solid var(--bleu-fonce);}
+  .memory-card.matched{background:var(--vert);pointer-events:none;}
+  .memory-card.hidden-face{color:transparent;}
+  footer{text-align:center;padding:26px;font-size:.8rem;color:var(--gris);}
+  @media (max-width:600px){ .match-wrapper{grid-template-columns:1fr;} .memory-grid{grid-template-columns:repeat(3,1fr);} }
+</style>
+</head>
+<body>
+<header>
+  <h1>🧪 Chapitre 1 · Activité 2</h1>
+  <p class="sub">Digestion in vitro de la viande — Sciences de la Vie, EB7</p>
+  <div class="badge-strip">
+    <span class="badge">🔤 Mots mêlés</span>
+    <span class="badge">🔗 Matching pairs</span>
+    <span class="badge">❓ Quiz numérique</span>
+    <span class="badge">🧠 Memory</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="active" data-target="s1">1️⃣ Découverte</button>
+  <button data-target="s2">2️⃣ Quiz</button>
+  <button data-target="s3">3️⃣ Association d'expériences</button>
+  <button data-target="s4">4️⃣ Memory</button>
+</nav>
+
+<main>
+  <section id="s1" class="panel active">
+    <div class="card">
+      <span class="strategie">Stratégie : investigation guidée</span>
+      <h2>Comment vérifier le rôle des sucs digestifs ?</h2>
+      <div class="definition">
+        On réalise des expériences <strong>in vitro</strong> (« hors du corps », en tube à essai) pour observer
+        l'effet des <strong>sucs digestifs</strong> sur les aliments, à une température de <strong>37 °C</strong>
+        (température du corps).
+      </div>
+      <p>🧫 <strong>Expérience 1 :</strong> empois d'amidon + eau (tube A) / empois d'amidon + amylase salivaire (tube B), 37 °C.
+      Résultat : dans le tube B, l'amidon <strong>disparaît</strong> — l'amylase (enzyme) l'a digéré.</p>
+      <p>🥩 <strong>Expérience 2 :</strong> viande + liquide gastrique (suc de l'estomac), 37 °C, 3 jours.
+      Résultat : la viande est progressivement <strong>liquéfiée</strong>.</p>
+      <p>🧈 <strong>Expérience 3 :</strong> lipides (graisse) + suc pancréatique + bile, 3 heures.
+      Résultat : les lipides sont <strong>digérés</strong> ; la bile facilite l'action du suc pancréatique
+      (elle n'est pas un suc digestif : elle ne contient pas d'enzyme).</p>
+    </div>
+
+    <div class="card">
+      <span class="strategie">Stratégie : lettres mêlées (vocabulaire)</span>
+      <h2>🔤 Reconstitue les mots scientifiques</h2>
+      <div id="scrambleArea"></div>
+    </div>
+  </section>
+
+  <section id="s2" class="panel">
+    <div class="card">
+      <span class="strategie">Stratégie : quiz numérique gamifié</span>
+      <h2>❓ Teste tes connaissances</h2>
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="quizBar"></div></div>
+      <div id="quizArea"></div>
+    </div>
+  </section>
+
+  <section id="s3" class="panel">
+    <div class="card">
+      <span class="strategie">Stratégie : jeu d'association (matching pairs) — Exercices 1, 2, 4, 6</span>
+      <h2>🔗 Relie chaque expérience à son résultat</h2>
+      <p>Clique sur une expérience à gauche, puis sur le résultat correspondant à droite.</p>
+      <div class="match-wrapper">
+        <div class="match-col"><h3>EXPÉRIENCE</h3><div id="matchLeft"></div></div>
+        <div class="match-col"><h3>RÉSULTAT</h3><div id="matchRight"></div></div>
+      </div>
+      <div class="match-status" id="matchStatus"></div>
+      <div class="btn-row" style="justify-content:center;"><button class="btn secondary" id="matchReset">🔄 Recommencer</button></div>
+    </div>
+  </section>
+
+  <section id="s4" class="panel">
+    <div class="card">
+      <span class="strategie">Stratégie : jeu de mémoire (memory) — Exercices 3, 5</span>
+      <h2>🧠 Associe organe / glande et suc digestif</h2>
+      <p>Retourne deux cartes à la fois pour trouver les paires (organe ↔ suc/action).</p>
+      <div class="memory-grid" id="memoryGrid"></div>
+      <div class="btn-row" style="justify-content:center;"><button class="btn secondary" id="memoryReset">🔄 Nouvelle partie</button></div>
+    </div>
+  </section>
+</main>
+
+<footer>EB7 · Sciences de la Vie · Chapitre 1 – Digestion et absorption · Activité 2 · Ressource offline, sans dépendance externe</footer>
+
+<script>
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.target).classList.add('active');
+  });
+});
+
+const scrambleWords = [
+  {word:"DIGESTION", clue:"Transformation des aliments en nutriments"},
+  {word:"ENZYME", clue:"Substance qui accélère la digestion chimique"},
+  {word:"BILE", clue:"Liquide sécrété par le foie (n'est pas un suc digestif)"},
+  {word:"NUTRIMENT", clue:"Substance issue de la digestion, absorbée par le sang"},
+];
+const scrambleArea = document.getElementById('scrambleArea');
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+scrambleWords.forEach((item,idx)=>{
+  const wrap = document.createElement('div'); wrap.className='scramble-word';
+  const letters = shuffle(item.word.split(''));
+  wrap.innerHTML = `
+    <div class="scramble-clue">${idx+1}. ${item.clue} <em>(${item.word.length} lettres)</em></div>
+    <div class="scramble-answer" id="ans${idx}"></div>
+    <div class="scramble-letters" id="let${idx}"></div>
+    <div class="scramble-status" id="stat${idx}"></div>`;
+  scrambleArea.appendChild(wrap);
+  const ansZone = wrap.querySelector(`#ans${idx}`);
+  const letZone = wrap.querySelector(`#let${idx}`);
+  const statZone = wrap.querySelector(`#stat${idx}`);
+  let current = [];
+  letters.forEach((L)=>{
+    const b = document.createElement('button'); b.textContent = L;
+    b.addEventListener('click', ()=>{
+      if(b.classList.contains('used')) return;
+      b.classList.add('used'); current.push(L);
+      const span = document.createElement('span'); span.textContent = L; ansZone.appendChild(span);
+      if(current.length === item.word.length){
+        if(current.join('') === item.word){ statZone.textContent = "✅ Bravo !"; statZone.style.color = 'var(--vert-fonce)'; }
+        else{ statZone.textContent = "❌ Recharge la page pour recommencer ce mot."; statZone.style.color = 'var(--rose-fonce)'; }
+      }
+    });
+    letZone.appendChild(b);
+  });
+});
+
+const questions = [
+  {q:"Dans l'expérience amidon + amylase, quel est le facteur variable ?", options:["La température","La présence ou l'absence d'amylase","La couleur du tube","La durée seulement"], correct:1},
+  {q:"Pourquoi place-t-on les tubes à 37 °C ?", options:["Pour accélérer le refroidissement","Car c'est la température du corps humain, optimale pour les enzymes","Par hasard","Pour stériliser le tube"], correct:1},
+  {q:"Que devient l'amidon dans le tube contenant de l'amylase salivaire ?", options:["Il double de volume","Il disparaît (digéré)","Il devient solide","Rien ne se passe"], correct:1},
+  {q:"La bile contient-elle des enzymes ?", options:["Oui","Non, elle facilite l'action du suc pancréatique","Oui, uniquement pour les glucides","Non, elle détruit les enzymes"], correct:1},
+  {q:"Que révèle l'expérience de digestion de la viande par le liquide gastrique ?", options:["La viande n'est pas digérée","La viande est progressivement liquéfiée","La viande devient plus dure","Rien de notable"], correct:1},
+  {q:"Qu'est-ce qu'une expérience « in vitro » ?", options:["Une expérience réalisée dans le corps","Une expérience réalisée hors du corps (en tube)","Une expérience sans résultat","Une observation au microscope uniquement"], correct:1},
+  {q:"Quel est le rôle des sucs digestifs mis en évidence par ces expériences ?", options:["Ils colorent les aliments","Ils transforment chimiquement les aliments en nutriments","Ils bloquent la digestion","Ils n'ont aucun rôle"], correct:1},
+];
+let qIndex=0, score=0;
+const quizArea = document.getElementById('quizArea'); const quizBar = document.getElementById('quizBar');
+function renderQuestion(){
+  quizBar.style.width = (qIndex/questions.length*100)+'%';
+  if(qIndex>=questions.length){ renderScore(); return; }
+  const item = questions[qIndex];
+  quizArea.innerHTML = `<div class="quiz-question">Question ${qIndex+1} / ${questions.length} — ${item.q}</div>
+    <div class="quiz-options">${item.options.map((op,i)=>`<button class="quiz-option" data-i="${i}">${op}</button>`).join('')}</div>
+    <div class="quiz-feedback" id="qFeedback"></div>
+    <div class="btn-row"><button class="btn" id="nextQ" style="display:none;">Suivant ➜</button></div>`;
+  const opts = quizArea.querySelectorAll('.quiz-option');
+  opts.forEach(o=>{
+    o.addEventListener('click', ()=>{
+      opts.forEach(x=>x.style.pointerEvents='none');
+      const i = parseInt(o.dataset.i); const fb = document.getElementById('qFeedback');
+      if(i===item.correct){ o.classList.add('correct'); score++; fb.textContent="✅ Bonne réponse !"; }
+      else{ o.classList.add('wrong'); opts[item.correct].classList.add('correct'); fb.textContent="❌ La bonne réponse est surlignée en vert."; }
+      document.getElementById('nextQ').style.display='inline-block';
+    });
+  });
+  document.getElementById('nextQ').addEventListener('click', ()=>{ qIndex++; renderQuestion(); });
+}
+function renderScore(){
+  quizBar.style.width='100%';
+  quizArea.innerHTML = `<div class="quiz-score"><div class="score-num">${score} / ${questions.length}</div>
+    <p>${score===questions.length?"🌟 Parfait !":score>=questions.length/2?"👍 Bien joué !":"💪 Retourne à la Découverte et réessaie."}</p>
+    <button class="btn" id="restartQuiz">🔄 Recommencer</button></div>`;
+  document.getElementById('restartQuiz').addEventListener('click', ()=>{ qIndex=0; score=0; renderQuestion(); });
+}
+renderQuestion();
+
+const pairs = [
+  {left:"Amidon + amylase salivaire, 37°C", right:"L'amidon disparaît"},
+  {left:"Amidon + eau seule, 37°C (témoin)", right:"L'amidon reste présent"},
+  {left:"Viande + liquide gastrique, 37°C, 3 j", right:"La viande est liquéfiée"},
+  {left:"Lipides + suc pancréatique + bile", right:"Les lipides sont totalement digérés"},
+  {left:"Lipides + suc pancréatique sans bile", right:"Les lipides sont partiellement digérés"},
+];
+let matchSelectedLeft=null, matchSelectedRight=null, matchFound=0;
+function buildMatch(){
+  matchFound=0; matchSelectedLeft=null; matchSelectedRight=null;
+  document.getElementById('matchStatus').textContent='';
+  const leftZone = document.getElementById('matchLeft'); const rightZone = document.getElementById('matchRight');
+  leftZone.innerHTML=''; rightZone.innerHTML='';
+  const shuffledRight = shuffle(pairs);
+  pairs.forEach((p,i)=>{
+    const el = document.createElement('div'); el.className='match-item'; el.textContent=p.left; el.dataset.id=i;
+    el.addEventListener('click', ()=>selectMatch(el,'left',i));
+    leftZone.appendChild(el);
+  });
+  shuffledRight.forEach((p)=>{
+    const originalIndex = pairs.indexOf(p);
+    const el = document.createElement('div'); el.className='match-item'; el.textContent=p.right; el.dataset.id=originalIndex;
+    el.addEventListener('click', ()=>selectMatch(el,'right',originalIndex));
+    rightZone.appendChild(el);
+  });
+}
+function selectMatch(el,side,id){
+  if(el.classList.contains('matched')) return;
+  if(side==='left'){
+    if(matchSelectedLeft) matchSelectedLeft.classList.remove('selected');
+    matchSelectedLeft = el; el.classList.add('selected');
+  } else {
+    if(matchSelectedRight) matchSelectedRight.classList.remove('selected');
+    matchSelectedRight = el; el.classList.add('selected');
+  }
+  if(matchSelectedLeft && matchSelectedRight){
+    if(matchSelectedLeft.dataset.id === matchSelectedRight.dataset.id){
+      matchSelectedLeft.classList.add('matched'); matchSelectedRight.classList.add('matched');
+      matchSelectedLeft.classList.remove('selected'); matchSelectedRight.classList.remove('selected');
+      matchFound++;
+      matchSelectedLeft=null; matchSelectedRight=null;
+      if(matchFound===pairs.length) document.getElementById('matchStatus').textContent = "🎉 Toutes les paires trouvées !";
+    } else {
+      matchSelectedLeft.classList.add('wrong'); matchSelectedRight.classList.add('wrong');
+      setTimeout(()=>{
+        matchSelectedLeft.classList.remove('selected','wrong'); matchSelectedRight.classList.remove('selected','wrong');
+        matchSelectedLeft=null; matchSelectedRight=null;
+      }, 700);
+    }
+  }
+}
+buildMatch();
+document.getElementById('matchReset').addEventListener('click', buildMatch);
+
+const memoryPairs = [
+  ["Glandes salivaires","Salive"], ["Estomac","Suc gastrique"], ["Pancréas","Suc pancréatique"],
+  ["Foie","Bile"], ["Intestin grêle","Suc intestinal"], ["Enzyme","Digère chimiquement"],
+];
+let memFlipped=[], memMatched=0, memLock=false;
+function buildMemory(){
+  memMatched=0; memFlipped=[]; memLock=false;
+  let deck=[];
+  memoryPairs.forEach((p,i)=>{ deck.push({id:i,text:p[0]}); deck.push({id:i,text:p[1]}); });
+  deck = shuffle(deck);
+  const grid = document.getElementById('memoryGrid'); grid.innerHTML='';
+  deck.forEach((c)=>{
+    const el = document.createElement('div'); el.className='memory-card hidden-face';
+    el.textContent = '❓'; el.dataset.id=c.id; el.dataset.text=c.text;
+    el.addEventListener('click', ()=>flipCard(el));
+    grid.appendChild(el);
+  });
+}
+function flipCard(el){
+  if(memLock || el.classList.contains('flipped') || el.classList.contains('matched')) return;
+  el.classList.remove('hidden-face'); el.classList.add('flipped'); el.textContent = el.dataset.text;
+  memFlipped.push(el);
+  if(memFlipped.length===2){
+    memLock=true;
+    const [a,b] = memFlipped;
+    if(a.dataset.id === b.dataset.id){
+      a.classList.add('matched'); b.classList.add('matched');
+      memFlipped=[]; memLock=false; memMatched++;
+    } else {
+      setTimeout(()=>{
+        a.classList.remove('flipped'); a.classList.add('hidden-face'); a.textContent='❓';
+        b.classList.remove('flipped'); b.classList.add('hidden-face'); b.textContent='❓';
+        memFlipped=[]; memLock=false;
+      }, 800);
+    }
+  }
+}
+buildMemory();
+document.getElementById('memoryReset').addEventListener('click', buildMemory);
+</script>
+</body>
+</html>
